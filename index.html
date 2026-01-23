@@ -45,8 +45,8 @@
       }
 
       .frames-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        display: flex;
+        flex-direction: column;
         gap: 20px;
       }
 
@@ -56,10 +56,6 @@
         padding: 15px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         overflow-x: auto;
-      }
-
-      .frame-wrapper.horizontal {
-        grid-column: span 2;
       }
 
       .frame-wrapper iframe {
@@ -124,15 +120,9 @@
         height: 600px;
       }
 
-      @media (max-width: 1200px) {
-        .frame-wrapper.horizontal {
-          grid-column: span 1;
-        }
-      }
-
       @media (max-width: 768px) {
-        .frames-container {
-          grid-template-columns: 1fr;
+        body {
+          padding: 10px;
         }
       }
     </style>
@@ -162,17 +152,17 @@
           <iframe class="desktop-frame" id="desktopSmallFrame"></iframe>
         </div>
 
-        <div class="frame-wrapper horizontal">
+        <div class="frame-wrapper">
           <div class="frame-title">Desktop HD Horizontal (1280x600)</div>
           <iframe class="desktop-hd-frame" id="desktopHDFrame"></iframe>
         </div>
 
-        <div class="frame-wrapper horizontal">
+        <div class="frame-wrapper">
           <div class="frame-title">Desktop Full HD Horizontal (1920x600)</div>
           <iframe class="desktop-fullhd-frame" id="desktopFullHDFrame"></iframe>
         </div>
 
-        <div class="frame-wrapper horizontal">
+        <div class="frame-wrapper">
           <div class="frame-title">Desktop 2K Horizontal (2560x600)</div>
           <iframe class="desktop-2k-frame" id="desktop2KFrame"></iframe>
         </div>
