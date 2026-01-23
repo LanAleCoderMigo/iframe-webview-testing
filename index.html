@@ -57,6 +57,10 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
 
+      .frame-wrapper.horizontal {
+        grid-column: span 2;
+      }
+
       .frame-title {
         font-size: 14px;
         color: #666;
@@ -85,6 +89,16 @@
 
       .desktop-large-frame {
         height: 900px;
+      }
+
+      .desktop-horizontal-frame {
+        height: 600px;
+      }
+
+      @media (max-width: 1200px) {
+        .frame-wrapper.horizontal {
+          grid-column: span 1;
+        }
       }
 
       @media (max-width: 768px) {
@@ -123,13 +137,31 @@
           <iframe class="desktop-frame" id="desktopSmallFrame"></iframe>
         </div>
 
+        <div class="frame-wrapper horizontal">
+          <div class="frame-title">Desktop HD Horizontal (1280x600)</div>
+          <iframe class="desktop-horizontal-frame" id="desktopHDFrame"></iframe>
+        </div>
+
+        <div class="frame-wrapper horizontal">
+          <div class="frame-title">Desktop Full HD Horizontal (1920x600)</div>
+          <iframe
+            class="desktop-horizontal-frame"
+            id="desktopFullHDFrame"
+          ></iframe>
+        </div>
+
+        <div class="frame-wrapper horizontal">
+          <div class="frame-title">Desktop 2K Horizontal (2560x600)</div>
+          <iframe class="desktop-horizontal-frame" id="desktop2KFrame"></iframe>
+        </div>
+
         <div class="frame-wrapper">
-          <div class="frame-title">Desktop (1440x900)</div>
+          <div class="frame-title">Desktop Vertical (1440x900)</div>
           <iframe class="desktop-large-frame" id="desktopFrame"></iframe>
         </div>
 
         <div class="frame-wrapper">
-          <div class="frame-title">Desktop Large (1920x1080)</div>
+          <div class="frame-title">Desktop Large Vertical (1920x1080)</div>
           <iframe
             class="desktop-large-frame"
             id="desktopLargeFrame"
@@ -189,6 +221,9 @@
           document.getElementById("mobileLargeFrame").src = data.URL;
           document.getElementById("tabletFrame").src = data.URL;
           document.getElementById("desktopSmallFrame").src = data.URL;
+          document.getElementById("desktopHDFrame").src = data.URL;
+          document.getElementById("desktopFullHDFrame").src = data.URL;
+          document.getElementById("desktop2KFrame").src = data.URL;
           document.getElementById("desktopFrame").src = data.URL;
           document.getElementById("desktopLargeFrame").src = data.URL;
 
