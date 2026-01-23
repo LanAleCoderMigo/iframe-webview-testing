@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Testing iframes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+
+      .status {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .status.loading {
+        color: #666;
+      }
+
+      .status.ready {
+        color: #059669;
+        font-weight: 500;
+      }
+
+      .status.error {
+        color: #dc2626;
+      }
+
+      .frames-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+      }
+
+      .frame-wrapper {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .frame-title {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+        font-weight: 500;
+      }
+
+      iframe {
+        width: 100%;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        display: block;
+      }
+
+      .mobile-frame {
+        height: 667px;
+      }
+
+      .tablet-frame {
+        height: 1024px;
+      }
+
+      .desktop-frame {
+        height: 800px;
+      }
+
+      .desktop-large-frame {
+        height: 900px;
+      }
+
+      @media (max-width: 768px) {
+        .frames-container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="status loading" id="status">Cargando...</div>
+
+      <div class="frames-container" id="framesContainer" style="display: none">
+        <div class="frame-wrapper">
+          <div class="frame-title">Mobile Small (375x667)</div>
+          <iframe class="mobile-frame" id="mobileFrame"></iframe>
+        </div>
+
+        <div class="frame-wrapper">
+          <div class="frame-title">Mobile Large (414x896)</div>
+          <iframe
+            class="mobile-frame"
+            id="mobileLargeFrame"
+            style="height: 896px"
+          ></iframe>
+        </div>
+
+        <div class="frame-wrapper">
+          <div class="frame-title">Tablet Portrait (768x1024)</div>
+          <iframe class="tablet-frame" id="tabletFrame"></iframe>
+        </div>
+
+        <div class="frame-wrapper">
+          <div class="frame-title">Desktop Small (1024x768)</div>
+          <iframe class="desktop-frame" id="desktopSmallFrame"></iframe>
+        </div>
+
+        <div class="frame-wrapper">
+          <div class="frame-title">Desktop (1440x900)</div>
+          <iframe class="desktop-large-frame" id="desktopFrame"></iframe>
+        </div>
+
+        <div class="frame-wrapper">
+          <div class="frame-title">Desktop Large (1920x1080)</div>
+          <iframe
+            class="desktop-large-frame"
+            id="desktopLargeFrame"
+            style="height: 1080px"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const CONFIG = {
+        endpoint: "https://sb-mw.migopayments.com/transactions",
+        token:
+          "0674a08d361c7262b3c6a93a100d5bc5f70fb5eb53597e5dcc04bcee542cf1fd",
+      };
+
+      function generateUserId() {
+        const random5Digits = Math.floor(Math.random() * 100000)
+          .toString()
+          .padStart(5, "0");
+        return "502" + random5Digits;
+      }
+
+      async function init() {
+        const statusEl = document.getElementById("status");
+        const framesContainer = document.getElementById("framesContainer");
+
+        try {
+          const userId = generateUserId().toString();
+
+          const response = await fetch(CONFIG.endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: CONFIG.token,
+            },
+            body: JSON.stringify({
+              amount: 100,
+              userId: userId,
+              channel: "app",
+              client: "migoTest",
+              ads: [],
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+          }
+
+          const data = await response.json();
+
+          if (!data.URL) {
+            throw new Error("No se recibió URL en la respuesta");
+          }
+
+          document.getElementById("mobileFrame").src = data.URL;
+          document.getElementById("mobileLargeFrame").src = data.URL;
+          document.getElementById("tabletFrame").src = data.URL;
+          document.getElementById("desktopSmallFrame").src = data.URL;
+          document.getElementById("desktopFrame").src = data.URL;
+          document.getElementById("desktopLargeFrame").src = data.URL;
+
+          statusEl.textContent = `✓ Listo - Reference: ${data.reference}`;
+          statusEl.className = "status ready";
+          framesContainer.style.display = "grid";
+        } catch (error) {
+          statusEl.textContent = `✗ Error: ${error.message}`;
+          statusEl.className = "status error";
+          console.error("Error:", error);
+        }
+      }
+
+      init();
+    </script>
+  </body>
+</html>
